@@ -1,6 +1,5 @@
 package Calculator;
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 
 public class CalculatorUI {
@@ -12,16 +11,7 @@ public class CalculatorUI {
         calc_frame.setResizable(false);
         calc_frame.setLayout(null);
         calc_frame.setVisible(true);
-
-        // Operator Buttons
-        JButton[] calc_ops = calc_operators(50);
-        for (int i=0; i<5; i++)
-            calc_frame.add(calc_ops[i]);
-
-        // Last Row Of Calculator Keyboard
-        JButton[] calc_lr = calc_last_row(50);
-        for (int i=0; i<3; i++)
-            calc_frame.add(calc_lr[i]);
+        calc_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Text Field
         JTextField display = new JTextField();
@@ -32,64 +22,50 @@ public class CalculatorUI {
         display.setBackground(Color.white);
         display.setBorder(BorderFactory.createLineBorder(Color.black));
 
-        // Number Buttons
-        JButton[][] calc_nums = calc_numbers_btn(50);
-        for (int i=0; i<3; i++)
-            for (int j=0; j<3; j++)
-                calc_frame.add(calc_nums[i][j]);
+        // Cancel Button
+        JButton btn_C     = crateButton("C", 150, 0);
+        JButton btn_1     = crateButton("1", 0,   50);
+        JButton btn_2     = crateButton("2", 50,  50);
+        JButton btn_3     = crateButton("3", 100, 50);
+        JButton btn_4     = crateButton("4", 0,   100);
+        JButton btn_5     = crateButton("5", 50,  100);
+        JButton btn_6     = crateButton("6", 100, 100);
+        JButton btn_7     = crateButton("7", 0,   150);
+        JButton btn_8     = crateButton("8", 50,  150);
+        JButton btn_9     = crateButton("9", 100, 150);
+        JButton btn_plus  = crateButton("+", 150, 50);
+        JButton btn_minus = crateButton("+", 150, 100);
+        JButton btn_multi = crateButton("x", 150, 150);
+        JButton btn_point = crateButton(".", 0,   200);
+        JButton btn_0     = crateButton("0", 50,  200);
+        JButton btn_equal = crateButton("=", 100, 200);
+        JButton btn_div   = crateButton("/", 150, 200);
+
+        // Add Buttons To The Main Frame
+        calc_frame.add(btn_C);
+        calc_frame.add(btn_4);
+        calc_frame.add(btn_5);
+        calc_frame.add(btn_6);
+        calc_frame.add(btn_1);
+        calc_frame.add(btn_2);
+        calc_frame.add(btn_3);
+        calc_frame.add(btn_7);
+        calc_frame.add(btn_8);
+        calc_frame.add(btn_9);
+        calc_frame.add(btn_plus);
+        calc_frame.add(btn_minus);
+        calc_frame.add(btn_multi);
+        calc_frame.add(btn_point);
+        calc_frame.add(btn_0);
+        calc_frame.add(btn_equal);
+        calc_frame.add(btn_div);
     }
 
-    public static JButton[][] calc_numbers_btn(int size){
-        JButton[][] numbers = new JButton[3][3];
-        int index;
-        String btn_txt;
-
-        for (int i =0; i<3; i++)
-            for (int j=0; j<3; j++)
-            {
-                index = (i*3) + (j+1);
-                btn_txt = String.valueOf(index);
-                int xPos = j*50;
-                int yPos = (i+1)*50;
-                numbers[i][j] = new JButton(btn_txt);
-                numbers[i][j].setBounds(xPos,yPos,size,size);
-                numbers[i][j].setBackground(Color.lightGray);
-                numbers[i][j].setBorder(BorderFactory.createLineBorder(Color.black));
-            }
-
-        return numbers;
-    }
-
-    public static JButton[] calc_operators(int size){
-        JButton[] op = new JButton[5];
-        String[] op_txt = {"C", "+", "-", "*", "/"};
-
-        for (int i=0; i<5; i++) {
-            int xPos = 150;
-            int yPos = i*50;
-            op[i] = new JButton(op_txt[i]);
-            op[i].setBounds(xPos, yPos, size, size);
-            op[i].setBackground(Color.lightGray);
-            op[i].setBorder(BorderFactory.createLineBorder(Color.black));
-        }
-
-        return op;
-    }
-
-
-    public static JButton[] calc_last_row(int size){
-        JButton[] lr = new JButton[3];
-        String[] lr_txt = {".", "0", "="};
-
-        for (int i=0; i<3; i++) {
-            int xPos = i*50;
-            int yPos = 200;
-            lr[i] = new JButton(lr_txt[i]);
-            lr[i].setBounds(xPos, yPos, size, size);
-            lr[i].setBackground(Color.lightGray);
-            lr[i].setBorder(BorderFactory.createLineBorder(Color.black));
-        }
-
-        return lr;
+    private static JButton crateButton(String text, int x, int y) {
+        JButton btn = new JButton(text);
+        btn.setBounds(x, y, 50, 50);
+        btn.setBackground(Color.lightGray);
+        btn.setBorder(BorderFactory.createLineBorder(Color.black));
+        return btn;
     }
 }
