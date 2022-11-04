@@ -1,4 +1,6 @@
-import CarPackage.Car;
+package CarPackage;
+
+import calculator.CarPackage.Car;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

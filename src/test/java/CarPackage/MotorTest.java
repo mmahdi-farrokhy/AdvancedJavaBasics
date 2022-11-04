@@ -1,5 +1,7 @@
-import CarPackage.Motor;
-import CarPackage.Vehicle;
+package CarPackage;
+
+import calculator.CarPackage.Motor;
+import calculator.CarPackage.Vehicle;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
