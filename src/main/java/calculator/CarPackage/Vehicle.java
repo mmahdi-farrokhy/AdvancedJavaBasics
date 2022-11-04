@@ -1,4 +1,4 @@
-package CarPackage;
+package calculator.CarPackage;
 
 public abstract class Vehicle {
     public boolean engineOn;

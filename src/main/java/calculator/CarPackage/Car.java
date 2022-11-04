@@ -1,4 +1,4 @@
-package CarPackage;
+package calculator.CarPackage;
 
 public class Car extends Vehicle implements GearBox, Trunk{
     //Constructor
