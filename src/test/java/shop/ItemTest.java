@@ -1,11 +1,13 @@
 package shop;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.LinkedList;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -17,7 +19,7 @@ public class ItemTest {
     @BeforeEach
     void setUp() {
         // Given
-        shoppingList = new ShoppingListServiceImpl(new ShoppingListDAOImplDouble());
+        shoppingList = new ShoppingListServiceImpl(new ShoppingListDAOImpl());
         itemList = new LinkedList<>();
     }
 
@@ -71,6 +73,24 @@ public class ItemTest {
         assertThrows(ItemQuantityException.class, () -> shoppingList.saveItems(itemList));
     }
 
+    @Test
+    void should_count_not_null_names_in_item_table() {
+        int numOfRecords = shoppingList.countRecords();
+
+        assertThat(numOfRecords).isEqualTo(7);
+    }
+
+    @Test
+    void should_delete_all_the_items() {
+        itemList.add(new Item("Orange", 5));
+        itemList.add(new Item("Dildo", 6));
+        itemList.add(new Item("Banana", 4));
+        shoppingList.clearList();
+        int count = shoppingList.countRecords();
+
+        Assertions.assertThat(count).isEqualTo(0);
+    }
+
     class ShoppingListDAOImplDouble implements ShoppingListDAO{
 
         @Override
@@ -80,6 +100,16 @@ public class ItemTest {
 
         @Override
         public void saveItems(List<Item> items) {
+
+        }
+
+        @Override
+        public int countRecords() {
+            return 0;
+        }
+
+        @Override
+        public void clearList() {
 
         }
     }

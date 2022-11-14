@@ -22,4 +22,14 @@ public class ShoppingListServiceImpl implements ShoppingListService {
         }
         shoppingListDAO.saveItems(items);
     }
+
+    @Override
+    public int countRecords() {
+        return shoppingListDAO.countRecords();
+    }
+
+    @Override
+    public void clearList() {
+        shoppingListDAO.clearList();
+    }
 }

@@ -16,4 +16,12 @@ public class Item {
         if (Quantity < 1 || Quantity > 100)
             throw new ItemQuantityException("Size is out of range");
     }
+
+    public String getName() {
+        return Name;
+    }
+
+    public int getQuantity() {
+        return Quantity;
+    }
 }

@@ -6,4 +6,8 @@ public interface ShoppingListService {
     List<Item> findAllItems();
 
     void  saveItems(List<Item> items);
+
+    int countRecords();
+
+    void clearList();
 }
