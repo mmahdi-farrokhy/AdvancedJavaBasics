@@ -13,6 +13,7 @@ public class ShoppingListUI {
     public static final String SAVE_BG_PATH = "E:/User/work/MASTER DIAG/M.Mahdi Farrokhy/AdvancedJavaBasics/src/main//resources/save_bg.png";
     public static final String SEARCH_BG_PATH = "E:/User/work/MASTER DIAG/M.Mahdi Farrokhy/AdvancedJavaBasics/src/main//resources/search_bg.png";
     public static final String EMAIL_BG_PATH = "E:/User/work/MASTER DIAG/M.Mahdi Farrokhy/AdvancedJavaBasics/src/main//resources/email_bg.png";
+    public static final String PDF_BG_PATH = "E:/User/work/MASTER DIAG/M.Mahdi Farrokhy/AdvancedJavaBasics/src/main//resources/pdf_bg.png";
 
     // Main Frame Properties
     public static final int FRAME_WIDTH = 405;
@@ -28,10 +29,15 @@ public class ShoppingListUI {
     public static final int SEARCH_BUTTON_Y = 10;
     public static final int SEARCH_BUTTON_SIZE = 45;
 
-    // Search Button Properties
+    // E-Mail Button Properties
     private static final int EMAIL_BUTTON_X = 200;
     public static final int EMAIL_BUTTON_Y = 10;
     public static final int EMAIL_BUTTON_SIZE = 45;
+
+    // PDF Button Properties
+    private static final int PDF_BUTTON_X = 280;
+    public static final int PDF_BUTTON_Y = 10;
+    public static final int PDF_BUTTON_SIZE = 45;
 
 
     // Name Text Field Properties
@@ -52,6 +58,7 @@ public class ShoppingListUI {
     // Shopping List Objects
     private static ShoppingListService shoppingList;
     private static EmailService emailService;
+    private static PDFService pdfService;
     private static List<Item> itemList = new LinkedList<>();
 
     public static final int ITEMS_NUM = 5;
@@ -66,13 +73,11 @@ public class ShoppingListUI {
 
         for (int i=0; i<ITEMS_NUM; i++){
             itemNames[i] = newTextField(NAME_FIELD_X, NAME_FIELD_Y + (56*i), NAME_FIELD_W, NAME_FIELD_H);
-            itemNames[i].setHorizontalAlignment(SwingConstants.CENTER);
             itemQuantities[i] = newTextField(QUANTITY_FIELD_X, QUANTITY_FIELD_Y + (56*i), QUANTITY_FIELD_W, QUANTITY_FIELD_H);
-            itemQuantities[i].setHorizontalAlignment(SwingConstants.CENTER);
         }
 
-        // Label Above Text Fields
-        newLabel("Name", 145, LABEL_Y, 50, LABEL_H);
+        // Labels Above Text Fields
+        newLabel("Name", 145, LABEL_Y, 70, LABEL_H);
         newLabel("Quantity", 295, LABEL_Y,60, LABEL_H );
 
         // Save To Database Button
@@ -113,7 +118,7 @@ public class ShoppingListUI {
         JButton email = newButton(EMAIL_BUTTON_X, EMAIL_BUTTON_Y, EMAIL_BUTTON_SIZE, "E-Mail");
         JLabel emailBG = setBackground(EMAIL_BG_PATH, EMAIL_BUTTON_X, EMAIL_BUTTON_Y, EMAIL_BUTTON_SIZE, EMAIL_BUTTON_SIZE);
         email.add(emailBG);
-        email.addActionListener(e -> getEmailForm());
+        email.addActionListener(e -> sendEmail());
         email.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
@@ -126,6 +131,23 @@ public class ShoppingListUI {
             }
         });
 
+        // Save To PDF Button
+        JButton pdf = newButton(PDF_BUTTON_X, PDF_BUTTON_Y, PDF_BUTTON_SIZE, ".PDF");
+        JLabel pdfBG = setBackground(PDF_BG_PATH, PDF_BUTTON_X, PDF_BUTTON_Y, PDF_BUTTON_SIZE, PDF_BUTTON_SIZE);
+        pdf.add(pdfBG);
+        pdf.addActionListener(e -> saveToPDF());
+        pdf.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                pdf.setBorder((BorderFactory.createLineBorder(Color.decode("#6a6267"))));
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                pdf.setBorder((BorderFactory.createLineBorder(Color.decode("#ffffff"))));
+            }
+        });
+
         // Background Image Of Main Frame
         JLabel backGround = setBackground(FRAME_BG_PATH, 0, 0, FRAME_WIDTH, FRAME_HEIGHT);
 
@@ -133,6 +155,7 @@ public class ShoppingListUI {
         list_frame.add(save);
         list_frame.add(search);
         list_frame.add(email);
+        list_frame.add(pdf);
         for (int i=0; i<ITEMS_NUM; i++) {
             list_frame.add(itemNames[i]);
             list_frame.add(itemQuantities[i]);
@@ -148,31 +171,65 @@ public class ShoppingListUI {
         list_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    private static void sendEmail() {
+    private static void saveToPDF() {
+        // This Method Should Save The List To A PDF File
+
+    }
+
+    private static boolean sendEmail() {
         String from = "";
         String to = "";
         String emailText = "";
         String emailPassword = "";
+        emailService = new EmailServiceImpl("Shopping List");
+
+        from = (String)JOptionPane.showInputDialog(list_frame, "Please Enter Your E-Mail", "Your E-Mail", JOptionPane.OK_CANCEL_OPTION);
+        if (from == null || from.isEmpty()) {
+            JOptionPane.showMessageDialog(list_frame, "Enter Your E-Mail Correctly", "Invalid E-Mail!", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        emailPassword = (String)JOptionPane.showInputDialog(list_frame, "Please Enter Your E-Mail Password", "Recipient E-Mail", JOptionPane.OK_CANCEL_OPTION);
+        if (emailPassword == null || emailPassword.isEmpty()) {
+            JOptionPane.showMessageDialog(list_frame, "Enter Your Password", "Invalid Password!", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        to = (String)JOptionPane.showInputDialog(list_frame, "Please Enter Recipient E-Mail", "Recipient E-Mail", JOptionPane.OK_CANCEL_OPTION);
+        if (to == null || to.isEmpty()) {
+            JOptionPane.showMessageDialog(list_frame, "Enter Recipient E-Mail", "Invalid E-Mail!", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+
+        emailText = "Testing Function";
+
         emailService.sendEmail(from, emailPassword,to, emailText);
         JOptionPane.showMessageDialog(list_frame, "E-Mail Sent!");
+        return true;
     }
-
-    private static void getEmailForm(){
-        JFrame emailFrame = new JFrame();
-        emailFrame.setSize(300, 300);
-        emailFrame.setResizable(false);
-        emailFrame.setLayout(null);
-        emailFrame.setVisible(true);
-        emailFrame.setLocationRelativeTo(null);
-        list_frame.add(emailFrame);
-    }
+//
+//    private static void getEmailForm(){
+//        JFrame emailFrame = new JFrame();
+//        emailFrame.setSize(300, 300);
+//        emailFrame.setResizable(false);
+//        emailFrame.setLayout(null);
+//        emailFrame.setVisible(true);
+//        emailFrame.setLocationRelativeTo(null);
+//        list_frame.add(emailFrame);
+//    }
 
     private static void newLabel(String Name, int x, int y, int width,  int height) {
         JLabel nameLabel = new JLabel(Name);
+        nameLabel.setHorizontalAlignment(SwingConstants.CENTER);
         nameLabel.setBounds(x,y, width,height);
+        nameLabel.setForeground(Color.black); //
+        nameLabel.setBackground(Color.decode("#ffdfdf"));
+        nameLabel.setOpaque(true);
         nameLabel.setFont(new Font("Times New Romance", Font.BOLD, 14));
         list_frame.add(nameLabel);
     }
+
     private static JButton newButton(int x, int y, int size, String text){
         JButton button = new JButton(text);
         button.setBounds(x, y, size, size);
@@ -181,13 +238,14 @@ public class ShoppingListUI {
         return button;
     }
     private static JTextField newTextField(int x, int y, int width, int height){
-        JTextField itemName = new JTextField();
-        itemName.setBounds(x, y, width, height);
-        itemName.setEnabled(true);
-        itemName.setEditable(true);
-        itemName.setBackground(Color.white);
-        itemName.setBorder(BorderFactory.createLineBorder(Color.darkGray));
-        return itemName;
+        JTextField itemField = new JTextField();
+        itemField.setBounds(x, y, width, height);
+        itemField.setEnabled(true);
+        itemField.setEditable(true);
+        itemField.setBackground(Color.white);
+        itemField.setBorder(BorderFactory.createLineBorder(Color.darkGray));
+        itemField.setHorizontalAlignment(SwingConstants.CENTER);
+        return itemField;
     }
     private static JLabel setBackground(String path, int x, int y ,int width, int height){
         JLabel bg;
