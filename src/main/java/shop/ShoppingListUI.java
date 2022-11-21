@@ -9,36 +9,29 @@ import java.util.List;
 public class ShoppingListUI {
 
     // Pictures Decleration
-    public static final String FRAME_BG_PATH = "E:/User/work/MASTER DIAG/M.Mahdi Farrokhy/AdvancedJavaBasics/src/main//resources/frame_bg.jpg";
-    public static final String SAVE_BG_PATH = "E:/User/work/MASTER DIAG/M.Mahdi Farrokhy/AdvancedJavaBasics/src/main//resources/save_bg.png";
-    public static final String SEARCH_BG_PATH = "E:/User/work/MASTER DIAG/M.Mahdi Farrokhy/AdvancedJavaBasics/src/main//resources/search_bg.png";
-    public static final String EMAIL_BG_PATH = "E:/User/work/MASTER DIAG/M.Mahdi Farrokhy/AdvancedJavaBasics/src/main//resources/email_bg.png";
-    public static final String PDF_BG_PATH = "E:/User/work/MASTER DIAG/M.Mahdi Farrokhy/AdvancedJavaBasics/src/main//resources/pdf_bg.png";
+    public static final String FRAME_BG_PATH = "src/main//resources/frame_bg.jpg";
+    public static final String SAVE_BG_PATH = "src/main//resources/save_bg.png";
+    public static final String SEARCH_BG_PATH = "src/main//resources/search_bg.png";
+    public static final String PDF_BG_PATH = "src/main//resources/pdf_bg.png";
 
     // Main Frame Properties
     public static final int FRAME_WIDTH = 405;
     public static final int FRAME_HEIGHT = 500;
 
     // Save Button Properties
-    public static final int SAVE_BUTTON_X = 40;
+    public static final int SAVE_BUTTON_X = 80;
     public static final int SAVE_BUTTON_Y = 10;
     public static final int SAVE_BUTTON_SIZE = 45;
 
     // Search Button Properties
-    public static final int SEARCH_BUTTON_X = 120;
+    public static final int SEARCH_BUTTON_X = 160;
     public static final int SEARCH_BUTTON_Y = 10;
     public static final int SEARCH_BUTTON_SIZE = 45;
 
-    // E-Mail Button Properties
-    private static final int EMAIL_BUTTON_X = 200;
-    public static final int EMAIL_BUTTON_Y = 10;
-    public static final int EMAIL_BUTTON_SIZE = 45;
-
     // PDF Button Properties
-    private static final int PDF_BUTTON_X = 280;
+    private static final int PDF_BUTTON_X = 240;
     public static final int PDF_BUTTON_Y = 10;
     public static final int PDF_BUTTON_SIZE = 45;
-
 
     // Name Text Field Properties
     public static final int NAME_FIELD_X = 40;
@@ -49,7 +42,7 @@ public class ShoppingListUI {
     // Quantity Text Field Properties
     public static final int QUANTITY_FIELD_X = 300;
     public static final int QUANTITY_FIELD_Y = 100;
-    public static final int QUANTITY_FIELD_W = 50;
+    public static final int QUANTITY_FIELD_W = 70;
     public static final int QUANTITY_FIELD_H = 50;
     public static final int LABEL_Y = 80;
     public static final int LABEL_H = 15;
@@ -57,9 +50,8 @@ public class ShoppingListUI {
 
     // Shopping List Objects
     private static ShoppingListService shoppingList;
-    private static EmailService emailService;
     private static PDFService pdfService;
-    private static List<Item> itemList = new LinkedList<>();
+    private static final List<Item> itemList = new LinkedList<>();
 
     public static final int ITEMS_NUM = 5;
     // Items Name Text Box
@@ -77,8 +69,8 @@ public class ShoppingListUI {
         }
 
         // Labels Above Text Fields
-        newLabel("Name", 145, LABEL_Y, 70, LABEL_H);
-        newLabel("Quantity", 295, LABEL_Y,60, LABEL_H );
+        newLabel("Name", NAME_FIELD_X, NAME_FIELD_W);
+        newLabel(" Quantity", QUANTITY_FIELD_X-10, QUANTITY_FIELD_W+10);
 
         // Save To Database Button
         JButton save = newButton(SAVE_BUTTON_X, SAVE_BUTTON_Y, SAVE_BUTTON_SIZE, "Save");
@@ -114,23 +106,6 @@ public class ShoppingListUI {
             }
         });
 
-        // Send E-Mail Button
-        JButton email = newButton(EMAIL_BUTTON_X, EMAIL_BUTTON_Y, EMAIL_BUTTON_SIZE, "E-Mail");
-        JLabel emailBG = setBackground(EMAIL_BG_PATH, EMAIL_BUTTON_X, EMAIL_BUTTON_Y, EMAIL_BUTTON_SIZE, EMAIL_BUTTON_SIZE);
-        email.add(emailBG);
-        email.addActionListener(e -> sendEmail());
-        email.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                email.setBorder((BorderFactory.createLineBorder(Color.decode("#6a6267"))));
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                email.setBorder((BorderFactory.createLineBorder(Color.decode("#ffffff"))));
-            }
-        });
-
         // Save To PDF Button
         JButton pdf = newButton(PDF_BUTTON_X, PDF_BUTTON_Y, PDF_BUTTON_SIZE, ".PDF");
         JLabel pdfBG = setBackground(PDF_BG_PATH, PDF_BUTTON_X, PDF_BUTTON_Y, PDF_BUTTON_SIZE, PDF_BUTTON_SIZE);
@@ -154,7 +129,6 @@ public class ShoppingListUI {
         // Add Panel To The Main Frame
         list_frame.add(save);
         list_frame.add(search);
-        list_frame.add(email);
         list_frame.add(pdf);
         for (int i=0; i<ITEMS_NUM; i++) {
             list_frame.add(itemNames[i]);
@@ -176,60 +150,16 @@ public class ShoppingListUI {
 
     }
 
-    private static boolean sendEmail() {
-        String from = "";
-        String to = "";
-        String emailText = "";
-        String emailPassword = "";
-        emailService = new EmailServiceImpl("Shopping List");
-
-        from = (String)JOptionPane.showInputDialog(list_frame, "Please Enter Your E-Mail", "Your E-Mail", JOptionPane.OK_CANCEL_OPTION);
-        if (from == null || from.isEmpty()) {
-            JOptionPane.showMessageDialog(list_frame, "Enter Your E-Mail Correctly", "Invalid E-Mail!", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-
-        emailPassword = (String)JOptionPane.showInputDialog(list_frame, "Please Enter Your E-Mail Password", "Recipient E-Mail", JOptionPane.OK_CANCEL_OPTION);
-        if (emailPassword == null || emailPassword.isEmpty()) {
-            JOptionPane.showMessageDialog(list_frame, "Enter Your Password", "Invalid Password!", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-
-        to = (String)JOptionPane.showInputDialog(list_frame, "Please Enter Recipient E-Mail", "Recipient E-Mail", JOptionPane.OK_CANCEL_OPTION);
-        if (to == null || to.isEmpty()) {
-            JOptionPane.showMessageDialog(list_frame, "Enter Recipient E-Mail", "Invalid E-Mail!", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-
-
-        emailText = "Testing Function";
-
-        emailService.sendEmail(from, emailPassword,to, emailText);
-        JOptionPane.showMessageDialog(list_frame, "E-Mail Sent!");
-        return true;
-    }
-//
-//    private static void getEmailForm(){
-//        JFrame emailFrame = new JFrame();
-//        emailFrame.setSize(300, 300);
-//        emailFrame.setResizable(false);
-//        emailFrame.setLayout(null);
-//        emailFrame.setVisible(true);
-//        emailFrame.setLocationRelativeTo(null);
-//        list_frame.add(emailFrame);
-//    }
-
-    private static void newLabel(String Name, int x, int y, int width,  int height) {
+    private static void newLabel(String Name, int x, int width) {
         JLabel nameLabel = new JLabel(Name);
         nameLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        nameLabel.setBounds(x,y, width,height);
-        nameLabel.setForeground(Color.black); //
-        nameLabel.setBackground(Color.decode("#ffdfdf"));
+        nameLabel.setBounds(x,LABEL_Y, width,LABEL_H);
+        nameLabel.setForeground(Color.white); //
+        nameLabel.setBackground(Color.decode("#000000"));
         nameLabel.setOpaque(true);
         nameLabel.setFont(new Font("Times New Romance", Font.BOLD, 14));
         list_frame.add(nameLabel);
     }
-
     private static JButton newButton(int x, int y, int size, String text){
         JButton button = new JButton(text);
         button.setBounds(x, y, size, size);
@@ -261,10 +191,7 @@ public class ShoppingListUI {
             if(emptyItemNameOrQuantity(itemNames[i], itemQuantities[i]) == -2)
                 emptyCount++;
 
-        if (emptyCount == ITEMS_NUM)
-            return true;
-        else
-            return false;
+        return (emptyCount == ITEMS_NUM);
     }
     private static int emptyItemNameOrQuantity(JTextField nameField, JTextField quantityField){
         String name = nameField.getText();
@@ -272,7 +199,7 @@ public class ShoppingListUI {
 
         if((name == null || name.isEmpty()) && (quantity == null || quantity.isEmpty()))
             return -2;
-        if((name == null || name.isEmpty()) && (quantity != null || !(quantity.isEmpty())))
+        else if((name == null || name.isEmpty()) && (quantity != null || !(quantity.isEmpty())))
             return -1;
         else if((name != null || !(name.isEmpty())) && (quantity == null || quantity.isEmpty()))
             return 0;
@@ -282,29 +209,31 @@ public class ShoppingListUI {
     private static boolean saveItems() {
         shoppingList.clearList();
 
+        for (Item item : itemList) {
+            itemList.remove(item);
+        }
+
         boolean[] isAdded = new boolean[ITEMS_NUM];
         String[] names = new String[ITEMS_NUM];
         String[] quantities = new String[ITEMS_NUM];
 
-        // Read Items Names And Quantities
         for (int i = 0; i < ITEMS_NUM; i++) {
             names[i] = itemNames[i].getText();
             quantities[i] = itemQuantities[i].getText();
         }
 
-        // Check The Items Names And Quantities And Add To List If Allowed
-        if (emptyList()){
-            JOptionPane.showMessageDialog(list_frame, "List Is Empty!\nPlease Insert At Least 1 Name & Quantity",  "Inane warning", JOptionPane.ERROR_MESSAGE);
+        if (emptyList()) {
+            JOptionPane.showMessageDialog(list_frame, "List Is Empty!\nPlease Insert At Least 1 Name & Quantity", "Inane warning", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         else {
             for (int i = 0; i < ITEMS_NUM; i++) {
                 if (emptyItemNameOrQuantity(itemNames[i], itemQuantities[i]) == -1){
-                    JOptionPane.showMessageDialog(list_frame, "Item " + (i + 1) + " Name Is Empty!",  "Inane warning", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(list_frame, "Item " + (i + 1) + " Name Is Empty!",  "Wrong Item Entered!", JOptionPane.WARNING_MESSAGE);
                     return false;
                 }
                 else if (emptyItemNameOrQuantity(itemNames[i], itemQuantities[i]) == 0){
-                    JOptionPane.showMessageDialog(list_frame, "Item " + (i + 1) + " Quantity Is Empty!",  "Inane warning", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(list_frame, "Item " + (i + 1) + " Quantity Is Empty!",  "Wrong Item Entered!", JOptionPane.WARNING_MESSAGE);
                     return false;
                 }
                 else if (emptyItemNameOrQuantity(itemNames[i], itemQuantities[i]) == 1) {
@@ -314,55 +243,52 @@ public class ShoppingListUI {
             }
         }
 
-        int result = JOptionPane.showConfirmDialog((Component) null, "Are You Sure You Want To Save The List?", "alert", JOptionPane.YES_NO_OPTION);
-        if (result == 0){
+        int result = JOptionPane.showConfirmDialog((Component) null, "Are You Sure You Want To Save The List?", "Save List", JOptionPane.YES_NO_OPTION);
+        if (result == 0) {
             shoppingList.saveItems(itemList);
             JOptionPane.showMessageDialog(list_frame, "List Saved In Database!");
-            for (int i=0; i<ITEMS_NUM; i++)
-                if (isAdded[i])
-                    JOptionPane.showMessageDialog(list_frame, names[i] + " - " + quantities[i]);
-            return true;
+            for (int j=0; j<ITEMS_NUM; j++)
+                if (isAdded[j])
+                    JOptionPane.showMessageDialog(list_frame, names[j] + " - " + quantities[j]);
         }
-        else
-            return false;
-    }
-    private static boolean findAllItems() {
-        int numOfRecords = shoppingList.countRecords();
-        if (numOfRecords == 0){
-            JOptionPane.showMessageDialog(list_frame, "No List Is Saved",  "Inane warning", JOptionPane.ERROR_MESSAGE);
-
-            return false;
-        }
-
-        List<Item> items = shoppingList.findAllItems();
-        String[] names = new String[numOfRecords];
-        int[] quantities = new int[numOfRecords];
-        String[] message = new String[(numOfRecords/8)+1];
-        int i =0;
-
-        for (int y=0; y<message.length; y++)
-            message[y] = new String("");
-
-        for (Item item : items) {
-            names[i] = item.getName();
-            quantities[i] = item.getQuantity();
-            i++;
-        }
-
-        for (int j=0; j<numOfRecords; j++) {
-            message[j/8] += "Item " + (j+1) + ":\n" +
-                            "Name: " + names[j] + ",\n" +
-                            "Quantity: " + quantities[j] +
-                            "\n __________________\n";
-            }
-
-        JOptionPane.showMessageDialog(list_frame, message[0]);
-        for (int l=1; l<message.length; l++)
-            if (message[l] !=null || !(message[l].isEmpty()))
-                JOptionPane.showMessageDialog(list_frame, message[l]);
-
-        JOptionPane.showMessageDialog(list_frame, "Search Finished!");
 
         return true;
+    }
+    private static void findAllItems() {
+        int numOfRecords = shoppingList.countRecords();
+
+        if (numOfRecords == 0)
+            JOptionPane.showMessageDialog(list_frame, "No List Is Saved",  "Inane warning", JOptionPane.ERROR_MESSAGE);
+
+        else{
+            List<Item> items = shoppingList.findAllItems();
+            String[] names = new String[numOfRecords];
+            int[] quantities = new int[numOfRecords];
+            String[] message = new String[(numOfRecords/8)+1];
+            int i =0;
+
+            for (int y=0; y<message.length; y++)
+                message[y] = new String("");
+
+            for (Item item : items) {
+                names[i] = item.getName();
+                quantities[i] = item.getQuantity();
+                i++;
+            }
+
+            for (int j=0; j<numOfRecords; j++) {
+                message[j/8] += "Item " + (j+1) + ":\n" +
+                                "Name: " + names[j] + ",\n" +
+                                "Quantity: " + quantities[j] +
+                                "\n __________________\n";
+                }
+
+            JOptionPane.showMessageDialog(list_frame, message[0]);
+            for (int l=1; l<message.length; l++)
+                if (message[l] !=null || !(message[l].isEmpty()))
+                    JOptionPane.showMessageDialog(list_frame, message[l]);
+
+            JOptionPane.showMessageDialog(list_frame, "Search Finished!");
+        }
     }
 }
